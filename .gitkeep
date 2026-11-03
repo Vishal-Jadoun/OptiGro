@@ -1,0 +1,13 @@
+$folders = @(
+    "src/com/optigro/constants",
+    "src/com/optigro/controller",
+    "src/com/optigro/exception",
+    "src/com/optigro/models",
+    "src/com/optigro/repository",
+    "src/com/optigro/service",
+    "src/com/optigro/util"
+)
+
+foreach ($folder in $folders) {
+    New-Item -ItemType File -Path "$folder/.gitkeep" -Force
+}
