@@ -1,0 +1,16 @@
+# userId,username,password,role
+100,admin,admin123,ADMIN
+101,cust1,pass1,CUSTOMER
+102,cust2,pass2,CUSTOMER
+103,cust3,pass3,CUSTOMER
+104,cust4,pass4,CUSTOMER
+105,cust5,pass5,CUSTOMER
+106,cust6,pass6,CUSTOMER
+107,picker1,pass1,PICKER
+108,picker2,pass2,PICKER
+109,picker3,pass3,PICKER
+110,picker4,pass4,PICKER
+111,partner1,pass1,DELIVERY_PARTNER
+112,partner2,pass2,DELIVERY_PARTNER
+113,partner3,pass3,DELIVERY_PARTNER
+114,partner4,pass4,DELIVERY_PARTNER
