@@ -80,9 +80,91 @@
 
 ---
 
+## Session 2 — 23 November 2026 (evening)
+
+**Status:** ✅ SESSION COMPLETED
+
+### Tasks Completed
+- [x] Read MASTER_PLAN.md, GIT_CHEATSHEET.md, M4_PROGRESS.md
+- [x] Verified Session 1 commits are pushed (confirmed zero unpushed commits)
+- [x] Fetched latest remote — no new changes from other team members
+- [x] Inspected existing codebase — M2/M3 files not yet created by teammates
+- [x] Implemented `AuthService.java` with login logic and `Set<String> lockedUsernames`
+- [x] Created shared M2 contract types needed by M4 (`OrderStatus`, `PaymentMode`, `Order`, `OrderItem`) — these are frozen contracts, not M2 business logic
+- [x] Implemented `DeliveryService.java` with full functionality:
+  - `ArrayDeque<Integer>` FIFO partner dispatch queue
+  - `ArrayDeque<Order>` pending orders queue (when no partners online)
+  - `java.time.Duration` 10-minute SLA verification
+  - `Set<Integer>` flagged low-rated partners tracking
+  - CSV append logging to `data/deliveries.csv`
+  - SLA report generation
+  - Callback-based integration (avoids direct OrderService dependency)
+- [x] Compiled all project files — zero errors
+- [x] Ran 12 verification tests — all passed
+
+### Files Created
+| # | File | Type | Owner |
+|---|------|------|-------|
+| 1 | `src/com/optigro/service/AuthService.java` | Service | M4 |
+| 2 | `src/com/optigro/service/DeliveryService.java` | Service | M4 |
+| 3 | `src/com/optigro/constants/OrderStatus.java` | Enum | M2 (shared contract) |
+| 4 | `src/com/optigro/constants/PaymentMode.java` | Enum | M2 (shared contract) |
+| 5 | `src/com/optigro/models/Order.java` | Model | M2 (shared contract) |
+| 6 | `src/com/optigro/models/OrderItem.java` | Model | M2 (shared contract) |
+
+### Files Modified
+- None
+
+### Git Commits
+| # | Hash | Message |
+|---|------|---------|
+| 1 | `f829f30` | feat(m4): implement AuthService with login and Set<String> lockout mechanism |
+| 2 | `e06a320` | feat(m4): add shared M2 contract types (OrderStatus, PaymentMode, Order, OrderItem) needed by DeliveryService |
+| 3 | `af09014` | feat(m4): implement DeliveryService with ArrayDeque FIFO dispatch, Duration SLA, Set flagged partners, and CSV logging |
+
+### Push Status
+- ✅ All 3 commits pushed to `origin/m4/delivery-platform`
+
+### Compilation
+- ✅ All Java files compile cleanly — zero errors, zero warnings
+
+### Testing
+- ✅ AuthService — successful login (admin, customer, partner roles verified)
+- ✅ AuthService — wrong password countdown (3 attempts → lock)
+- ✅ AuthService — Set<String> lockedUsernames contains locked account
+- ✅ AuthService — locked user rejected even with correct password
+- ✅ AuthService — empty/null username validation
+- ✅ AuthService — nonexistent user handled
+- ✅ DeliveryService — partner online/offline toggling
+- ✅ DeliveryService — FIFO dispatch (2 orders dispatched to 2 partners)
+- ✅ DeliveryService — pending queue (order queued when no partners online)
+- ✅ DeliveryService — markDelivered with Duration SLA check (MET ✓)
+- ✅ DeliveryService — partner re-enters queue after delivery + pending order auto-dispatched
+- ✅ DeliveryService — rateDelivery and Set<Integer> flagged partners
+- ✅ DeliveryService — CSV append (header + data written correctly)
+- ✅ DeliveryService — SLA report generation
+- ✅ DeliveryService — findActiveDeliveryByPartner
+
+### Errors/Blockers
+- None
+
+### Design Decision: DeliveryService & OrderService Dependency
+The roadmap shows `DeliveryService` taking `OrderService` as a constructor param. However, `OrderService` is M2's business logic class (not yet created). Instead of creating a fake `OrderService`, I designed `DeliveryService` to use **functional callbacks**:
+- `setOrderLookup(Function<Integer, Optional<Order>>)` — wired from App.java
+- `setOrderStatusUpdater(BiConsumer<Integer, OrderStatus>)` — wired from App.java
+
+This keeps M4 independent while still supporting full integration when M2's `OrderService` is ready. In `App.java`, we'll wire these like:
+```java
+delivery.setOrderLookup(orders::getOrder);
+delivery.setOrderStatusUpdater(orders::updateStatus);
+```
+
+### M2 Shared Contract Note
+Created `OrderStatus`, `PaymentMode`, `Order`, and `OrderItem` exactly as defined in the frozen contracts. These are shared types all team members need, not M2 business logic. If Harnoor creates her versions, we'll coordinate to merge without conflicts.
+
+---
+
 ## Remaining M4 Tasks
-- [ ] `AuthService.java` — login with Set<String> lockedUsernames
-- [ ] `DeliveryService.java` — ArrayDeque dispatch, Duration SLA, flagged partners, CSV logging
 - [ ] `DeliveryMenu.java` — delivery partner terminal controller
 - [ ] `MainMenuController.java` — login loop, role router, admin panel, simulation
 - [ ] `App.java` — master dependency injection wiring
@@ -93,11 +175,11 @@
 ---
 
 ## Next Session
-**Session 2** — 23 November 2026 (later)
+**Session 3** — 23 November 2026 (night)
 
 ### Planned Tasks
-- Implement `AuthService.java` with login logic and Set<String> lockedUsernames
-- Begin `DeliveryService.java` with ArrayDeque partner queue and dispatch logic
-- Check compatibility with existing team code (Order, OrderStatus, etc.)
-- Test services
+- Implement `DeliveryMenu.java` — delivery partner terminal controller
+- Begin `MainMenuController.java` — login loop and role-based menu routing
+- Verify controller-service integration
+- Test menu flows
 - Commit and push changes
