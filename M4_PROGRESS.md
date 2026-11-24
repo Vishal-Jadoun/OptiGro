@@ -164,22 +164,86 @@ Created `OrderStatus`, `PaymentMode`, `Order`, and `OrderItem` exactly as define
 
 ---
 
-## Remaining M4 Tasks
-- [ ] `DeliveryMenu.java` — delivery partner terminal controller
-- [ ] `MainMenuController.java` — login loop, role router, admin panel, simulation
-- [ ] `App.java` — master dependency injection wiring
-- [ ] `reports/full_report.txt` — consolidated report export
-- [ ] Integration testing with M1/M2/M3 modules
-- [ ] End-to-end workflow testing
+## Session 3 — 24 November 2026 (night)
+
+**Status:** ✅ SESSION COMPLETED
+
+### Tasks Completed
+- [x] Read MASTER_PLAN.md, GIT_CHEATSHEET.md, M4_PROGRESS.md
+- [x] Verified Git status and merged upstream `origin/main` changes
+- [x] Integrated shared `ConsoleScannerUtil.java` and `AsciiTableFormatter.java` from team repo
+- [x] Implemented `DeliveryMenu.java` — delivery partner terminal controller
+  - Online / Offline status toggle
+  - Active assigned order viewer
+  - Delivery completion and 10-minute SLA trigger
+  - Performance dashboard with ratings and quality review warning
+- [x] Implemented `MainMenuController.java` — master platform controller
+  - ASCII banner with default demo credentials
+  - Secure authentication loop with `AuthService`
+  - Role-based routing (`ADMIN`, `DELIVERY_PARTNER`, `CUSTOMER`, `PICKER`)
+  - Administrator Control Panel
+  - M4 Consolidated System Reports menu
+  - Plain-text export of audit reports to `reports/full_report.txt` via `BufferedWriter`
+  - Pluggable callback hooks for M1/M2/M3 modules
+- [x] Created initial `reports/full_report.txt` audit report export
+- [x] Compiled all project files — 100% clean compilation (`javac`, 0 errors, 0 warnings)
+- [x] Tested all Session 3 components via automated test suite — all tests passed
+
+### Files Created
+| # | File | Type | Owner |
+|---|------|------|-------|
+| 1 | `src/com/optigro/controller/DeliveryMenu.java` | Controller | M4 |
+| 2 | `src/com/optigro/controller/MainMenuController.java` | Controller | M4 |
+| 3 | `reports/full_report.txt` | Report File | M4 |
+| 4 | `src/com/optigro/util/ConsoleScannerUtil.java` | Utility | M1/M2 (Integrated) |
+| 5 | `src/com/optigro/util/AsciiTableFormatter.java` | Utility | M2 (Integrated) |
+
+### Files Modified
+- None
+
+### Git Commits
+| # | Hash | Message |
+|---|------|---------|
+| 1 | `a7c2841` | chore(util): integrate shared ConsoleScannerUtil and AsciiTableFormatter utilities |
+| 2 | `ed5e5de` | feat(m4): implement DeliveryMenu console controller for delivery partners |
+| 3 | `8fa3b0b` | feat(m4): implement MainMenuController with login loop, role routing, and report export |
+| 4 | `927270b` | feat(m4): add initial consolidated audit report export |
+
+### Push Status
+- Pending final push at end of Session 3
+
+### Compilation
+- ✅ All Java files compile cleanly — zero errors, zero warnings
+
+### Testing
+- ✅ Repositories and Services loaded from CSV (15 users, 4 partners)
+- ✅ `DeliveryMenu` instantiated and verified with `DeliveryPartner` profile
+- ✅ `MainMenuController` banner display verified
+- ✅ Role router verified across all roles (`ADMIN`, `DELIVERY_PARTNER`, `CUSTOMER`, `PICKER`)
+- ✅ Pluggable handler integration verified
+- ✅ Dispatch, delivery completion, 5-star rating, and SLA report verified
+- ✅ `exportAllReportsToFile()` verified: `reports/full_report.txt` generated on disk with proper headers
+
+### Errors/Blockers
+- None
+
+---
+
+## Remaining M4 Tasks (For Final Session 4)
+- [ ] `App.java` — master manual dependency injection wiring connecting all components
+- [ ] Full end-to-end integration and simulation demonstration
+- [ ] Final compilation, test run, and git synchronization
+- [ ] Final viva preparation notes and project summary
 
 ---
 
 ## Next Session
-**Session 3** — 23 November 2026 (night)
+**Session 4 (FINAL SESSION)** — 25 November 2026
 
-### Planned Tasks
-- Implement `DeliveryMenu.java` — delivery partner terminal controller
-- Begin `MainMenuController.java` — login loop and role-based menu routing
-- Verify controller-service integration
-- Test menu flows
-- Commit and push changes
+### Planned Objectives
+- Wire full manual dependency injection in `App.java`
+- Connect callbacks (`orders.setOnOrderPlaced`, `picking.setOnOrderPacked`)
+- Wire all services into `MainMenuController`
+- Execute complete end-to-end order fulfillment test
+- Final compilation and clean build verification
+- Final commit, push, and viva defense preparation
