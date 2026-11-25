@@ -1,5 +1,6 @@
 package com.optigro.util;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 /**
@@ -47,5 +48,31 @@ public class ConsoleScannerUtil {
             return "";
         }
         return scanner.nextLine().trim();
+    }
+
+    public static double readDouble(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            if (!scanner.hasNextLine()) return 0.0;
+            String line = scanner.nextLine().trim();
+            try {
+                return Double.parseDouble(line);
+            } catch (NumberFormatException e) {
+                System.out.println("[!] Invalid input. Please enter a valid decimal number.");
+            }
+        }
+    }
+
+    public static LocalDate readDate(String prompt) {
+        while (true) {
+            System.out.print(prompt + " (YYYY-MM-DD): ");
+            if (!scanner.hasNextLine()) return LocalDate.now();
+            String line = scanner.nextLine().trim();
+            try {
+                return LocalDate.parse(line);
+            } catch (DateTimeParseException e) {
+                System.out.println("[!] Invalid date format. Use YYYY-MM-DD (e.g. 2026-12-15).");
+            }
+        }
     }
 }
