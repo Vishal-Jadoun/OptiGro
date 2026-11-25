@@ -258,7 +258,7 @@ public class NonPerishableProduct extends Product {
 
 ---
 
-### 5. `Bin.java` — Store Grid Cell (with `equals` & `hashCode`)
+### 5. `BinLayoutService.java` — Store Grid Cell (with `equals` & `hashCode`)
 **Path:** `src/com/optigro/models/Bin.java`
 
 **What to do:**
@@ -1094,7 +1094,7 @@ public class ConsoleScannerUtil {
 - [ ] `Product.java` (abstract, `equals` & `hashCode` by `id`).
 - [ ] `PerishableProduct.java` (extends Product, expiryDate).
 - [ ] `NonPerishableProduct.java` (extends Product, shelfLifeMonths).
-- [ ] `Bin.java` (`equals` & `hashCode` by `aisle + shelf`).
+- [ ] `BinLayoutService.java` (`equals` & `hashCode` by `aisle + shelf`).
 - [ ] `ProductRepository.java` (`ConcurrentHashMap`, `AtomicInteger`, `loadFromCsv()`, `saveToCsv()`).
 - [ ] Verify `data/products.csv` loads 20+ items cleanly into repo.
 
