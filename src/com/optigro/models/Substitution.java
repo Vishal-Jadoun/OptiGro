@@ -9,7 +9,7 @@ public class Substitution{
     private final String substituteName;
     private final boolean accepted;
 
-    public class Substitution(int originalProductId ,int substituteProductId, String originalName , String substituteName , boolean accepted ){
+    public  Substitution(int originalProductId ,int substituteProductId, String originalName , String substituteName , boolean accepted ){
         this.originalProductId = originalProductId;
         this.substituteProductId = substituteProductId;
         this.originalName = originalName;
