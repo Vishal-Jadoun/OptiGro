@@ -1,5 +1,7 @@
 package com.optigro.repository;
 
+import com.optigro.models.Picker;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
