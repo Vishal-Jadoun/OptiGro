@@ -22,7 +22,7 @@ public class Picker{
     public String getName() {return name; }
     public boolean isAvailable() {return available; }
     public void setAvailable(boolean available) {this.available = available;} 
-    public int getTaskCompleted() {return tasksCompleted;}
+    public int getTasksCompleted() {return tasksCompleted;}
     public void incrementTasksCompleted() {this.tasksCompleted++;} 
 
     @Override 
