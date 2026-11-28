@@ -22,7 +22,6 @@ public class DeliveryService {
     private final AtomicInteger deliveryCounter = new AtomicInteger(7000);
     private final Set<Integer> flaggedLowRatedPartners = new HashSet<>();
 
-    // Order lookup and status update functions (injected from App.java wiring)
     private java.util.function.Function<Integer, Optional<Order>> orderLookup;
     private java.util.function.BiConsumer<Integer, OrderStatus> orderStatusUpdater;
 
@@ -30,17 +29,10 @@ public class DeliveryService {
         this.partnerRepo = partnerRepo;
     }
 
-    /**
-     * Wire the order lookup function (called from App.java after OrderService is created).
-     * This avoids a direct dependency on OrderService, which is M2's class.
-     */
     public void setOrderLookup(java.util.function.Function<Integer, Optional<Order>> orderLookup) {
         this.orderLookup = orderLookup;
     }
 
-    /**
-     * Wire the order status updater function (called from App.java after OrderService is created).
-     */
     public void setOrderStatusUpdater(java.util.function.BiConsumer<Integer, OrderStatus> orderStatusUpdater) {
         this.orderStatusUpdater = orderStatusUpdater;
     }
@@ -54,7 +46,6 @@ public class DeliveryService {
             System.out.printf("[DeliveryHub] Partner %s is now ONLINE (Queue Position: %d)%n",
                 p.getName(), availablePartners.size());
 
-            // Check if orders are waiting in pending queue
             if (!pendingOrders.isEmpty()) {
                 Order waiting = pendingOrders.poll();
                 System.out.printf("[DeliveryHub] Auto-dispatching pending Order #%d to newly online partner %s%n",
@@ -72,9 +63,6 @@ public class DeliveryService {
         });
     }
 
-    // ==========================================
-    // Dispatch Engine: FIFO Assignment
-    // ==========================================
     public synchronized Delivery dispatch(Order order) {
         if (availablePartners.isEmpty()) {
             pendingOrders.offer(order);
@@ -83,7 +71,6 @@ public class DeliveryService {
             return null;
         }
 
-        // Dequeue first available partner in FIFO order
         int partnerId = availablePartners.poll();
         DeliveryPartner partner = partnerRepo.findById(partnerId).orElseThrow();
         partner.setStatus(PartnerStatus.ON_DELIVERY);
@@ -92,7 +79,6 @@ public class DeliveryService {
         Delivery delivery = new Delivery(deliveryId, order.getOrderId(), partnerId);
         deliveries.put(deliveryId, delivery);
 
-        // Update order status if wired
         if (orderStatusUpdater != null) {
             orderStatusUpdater.accept(order.getOrderId(), OrderStatus.OUT_FOR_DELIVERY);
         }
@@ -103,9 +89,6 @@ public class DeliveryService {
         return delivery;
     }
 
-    // ==========================================
-    // 10-Minute SLA Verification
-    // ==========================================
     public synchronized void markDelivered(int deliveryId) {
         Delivery delivery = deliveries.get(deliveryId);
         if (delivery == null) {
@@ -115,7 +98,6 @@ public class DeliveryService {
         LocalDateTime now = LocalDateTime.now();
         delivery.setDeliveredAt(now);
 
-        // SLA calculation using order's placedAt time
         long slaMinutes = -1;
         boolean met = false;
         if (orderLookup != null) {
@@ -128,14 +110,13 @@ public class DeliveryService {
         }
         delivery.setMetSla(met);
 
-        // Update order status if wired
         if (orderStatusUpdater != null) {
             orderStatusUpdater.accept(delivery.getOrderId(), OrderStatus.DELIVERED);
         }
 
         DeliveryPartner partner = partnerRepo.findById(delivery.getPartnerId()).orElseThrow();
         partner.setStatus(PartnerStatus.ONLINE);
-        availablePartners.offer(partner.getPartnerId()); // Re-enqueue in FIFO queue
+        availablePartners.offer(partner.getPartnerId());
 
         System.out.println("\n╔══════════════════════════════════════════════════════════╗");
         System.out.printf("║ DELIVERED: Order #%-6d fulfilled by %-18s ║%n",
@@ -147,14 +128,12 @@ public class DeliveryService {
         }
         System.out.println("╚══════════════════════════════════════════════════════════╝");
 
-        // File Persistence: Append delivery log to data/deliveries.csv
         try {
             appendDeliveryToCsv(delivery, "data/deliveries.csv");
         } catch (IOException e) {
             System.err.println("[!] Notice: Delivery marked in memory, failed to log to disk: " + e.getMessage());
         }
 
-        // If orders are waiting, dispatch immediately
         if (!pendingOrders.isEmpty()) {
             Order next = pendingOrders.poll();
             dispatch(next);
@@ -182,7 +161,6 @@ public class DeliveryService {
             DeliveryPartner p = partnerRepo.findById(d.getPartnerId()).orElseThrow();
             p.addRating(stars);
 
-            // Set demonstration: Track low-rated partners
             if (p.isLowRated()) {
                 flaggedLowRatedPartners.add(p.getPartnerId());
             }

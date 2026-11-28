@@ -10,7 +10,7 @@ public class Delivery {
     private final LocalDateTime dispatchedAt;
     private LocalDateTime deliveredAt;
     private boolean metSla;
-    private int rating; // 1 to 5 stars, 0 = unrated
+    private int rating;
 
     public Delivery(int deliveryId, int orderId, int partnerId) {
         this.deliveryId = deliveryId;

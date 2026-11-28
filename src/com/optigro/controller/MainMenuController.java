@@ -22,7 +22,6 @@ public class MainMenuController {
     private final DeliveryService deliveryService;
     private final DeliveryPartnerRepository partnerRepo;
 
-    // Decoupled pluggable handlers for other member slices (M1, M2, M3)
     private Consumer<User> customerMenuHandler;
     private Consumer<User> pickerMenuHandler;
     private Runnable inventoryMenuHandler;
@@ -177,15 +176,11 @@ public class MainMenuController {
         }
     }
 
-    // ========================================================
-    // Live Simulation: The Evaluator Demo Highlight
-    // ========================================================
     private void runLiveSimulation() {
         System.out.println("\n========================================================");
         System.out.println("      LAUNCHING LIVE MULTI-THREADED DEMO SIMULATION     ");
         System.out.println("========================================================");
 
-        // 1. Ensure Delivery Partner is Online
         deliveryService.registerPartnerOnline(6001);
 
         System.out.println("[Simulation] Partner #6001 registered online for order dispatch.");
@@ -238,7 +233,6 @@ public class MainMenuController {
         }
     }
 
-    // Demonstrates File I/O: BufferedWriter writing full summary to reports/full_report.txt
     public void exportAllReportsToFile() {
         File dir = new File("reports");
         if (!dir.exists()) {

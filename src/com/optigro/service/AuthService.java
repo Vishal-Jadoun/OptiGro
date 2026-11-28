@@ -23,28 +23,24 @@ public class AuthService {
 
         String cleanUsername = username.trim();
 
-        // 1. Instant check in HashSet (O(1))
         if (lockedUsernames.contains(cleanUsername)) {
             throw new InvalidAuthException("Security Alert: Account '" + cleanUsername +
                 "' is permanently locked after 3 failed attempts. Contact administrator.");
         }
 
-        // 2. Lookup user in repository
         User user = userRepo.findByUsername(cleanUsername)
             .orElseThrow(() -> new InvalidAuthException("User profile not found: " + cleanUsername));
 
-        // 3. Password Verification
         if (!user.getPassword().equals(password)) {
             user.incrementFailedAttempts();
             if (user.isLocked()) {
-                lockedUsernames.add(cleanUsername); // Mark in Set
+                lockedUsernames.add(cleanUsername);
                 throw new InvalidAuthException("Account locked! You exceeded 3 failed password attempts.");
             }
             int remaining = 3 - user.getFailedAttempts();
             throw new InvalidAuthException("Incorrect password. " + remaining + " attempt(s) remaining.");
         }
 
-        // 4. Success -> Reset failed attempts
         user.resetFailedAttempts();
         return user;
     }
